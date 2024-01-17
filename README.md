@@ -1,7 +1,9 @@
 # CATINDER
 
-This is the Final assessment template for CASA0014 - Please use this template and edit the relevant sections to personalise.
-This section has a short introduction to what the application is
+This app, inspired by Tinder, assists individuals in discovering their ideal adoptable pet using the Petfinder API, which provides access to a vast database of pets awaiting adoption. 
+Similar to Tinder's dating approach, users can swipe through pet profiles to indicate whether they are interested in a particular animal.
+
+
 
 ## Use this README File 
 
