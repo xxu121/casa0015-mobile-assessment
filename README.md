@@ -1,4 +1,4 @@
-# CATINDER
+# PETINDER
 
 This app, inspired by Tinder, assists individuals in discovering their ideal adoptable pet using the Petfinder API is an open resource(https://www.petfinder.com/developers/v2/docs/#request-structure), which provides access to a vast database of pets awaiting adoption. 
 Similar to Tinder's dating approach, users can swipe through pet profiles to indicate whether they are interested in a particular animal.
