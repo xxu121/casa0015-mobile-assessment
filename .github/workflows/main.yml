@@ -1,7 +1,7 @@
 
 name: Flutter Build and Upload Android APK
-
-on:
+on: workflow_dispatch
+#on:
     #push         # This is the condition that the action will run on
      #branches: [ main ]  # In this case when you push your code into GitHub
     # tags:
