@@ -1,8 +1,6 @@
-# PETINDER
+# Concern your hear rate
 
-This app, inspired by Tinder, assists individuals in discovering their ideal adoptable pet using the Petfinder API is an open resource(https://www.petfinder.com/developers/v2/docs/#request-structure), which provides access to a vast database of pets awaiting adoption. 
-Similar to Tinder's dating approach, users can swipe through pet profiles to indicate whether they are interested in a particular animal.
-
+This app is designed for users who want to monitor their heart rate in real-time, inspired by insights gained from a recent bike fitting session. Understanding the heart rate is important for optimising exercise results. Recognising that regular fittings are not feasible for every time doing exercise, I've incorporated the Heat Rate 30102 sensor, which can conveniently be attached to gloves. This feature is especially handy during indoor sports activities. The sensor connects to an ESP8266, transmitting data to an MQTT server. The app then retrieves this data and displays it in a visual format on your smartphone, allowing you to easily monitor the heart rate during exercise.
 
 
 ## Use this README File 
