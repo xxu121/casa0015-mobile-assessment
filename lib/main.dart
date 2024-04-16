@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     MyListView(),
     Text('Graph'), // Placeholder for graph screen
-    SettingsScreen(), // Settings screen
+    Text('Settings'), // Placeholder for settings screen
   ];
 
   void _onItemTapped(int index) {
