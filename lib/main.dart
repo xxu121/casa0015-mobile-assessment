@@ -10,11 +10,58 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(useMaterial3: false),
-        home: Scaffold(
-            appBar: AppBar(title: Text('MQTT ListView')),
-            body: MyListView()
-        )
+      theme: ThemeData(useMaterial3: false),
+      home: HomeScreen(), // Redirecting to a new HomeScreen widget that includes a bottom navigation bar
+    );
+  }
+}
+
+
+// New HomeScreen widget
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0; // New state variable for bottom nav
+
+  // Screens for each bottom navigation item
+  final List<Widget> _widgetOptions = <Widget>[
+    MyListView(),
+    Text('Graph'), // Placeholder for graph screen
+    SettingsScreen(), // Settings screen
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index; // Update the index on tap
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Follow Your Heart')),
+      body: _widgetOptions.elementAt(_selectedIndex), // Show selected screen
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Heart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart),
+            label: 'Graph',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped, // Setup tap callback
+      ),
     );
   }
 }
