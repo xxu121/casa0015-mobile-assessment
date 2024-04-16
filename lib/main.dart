@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     MyListView(),
     Text('Graph'), // Placeholder for graph screen
-    Text('Settings'), // Placeholder for settings screen
+    SettingsScreen(), // Settings screen
   ];
 
   void _onItemTapped(int index) {
@@ -43,9 +43,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Follow Your Heart')),
-      body: _widgetOptions.elementAt(_selectedIndex), // Show selected screen
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _widgetOptions,
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Heart',
@@ -60,7 +63,109 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped, // Setup tap callback
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}
+
+class SettingsScreen extends StatefulWidget {
+  @override
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  final _formKey = GlobalKey<FormState>();
+  String? _gender;
+  int? _age;
+  double? _weight;
+
+  final List<String> _genders = ['Male', 'Female', 'Other'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: ListView(
+        padding: EdgeInsets.all(16),
+        children: <Widget>[
+          DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: 'Gender',
+              border: OutlineInputBorder(),
+            ),
+            value: _gender,
+            isExpanded: true,
+            items: _genders.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                _gender = newValue;
+              });
+            },
+            validator: (value) => value == null ? 'Field required' : null,
+          ),
+          SizedBox(height: 20),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Age',
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.number,
+            onSaved: (value) {
+              _age = int.tryParse(value ?? '');
+            },
+            validator: (value) {
+              if (value == null || int.tryParse(value) == null) return 'Enter a valid age';
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Weight (kg)',
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.number,
+            onSaved: (value) {
+              _weight = double.tryParse(value ?? '');
+            },
+            validator: (value) {
+              if (value == null || double.tryParse(value) == null) return 'Enter a valid weight';
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
+                // Save settings or use them as needed
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Settings Saved'),
+                    content: Text(
+                        'Gender: $_gender\nAge: $_age\nWeight: $_weight'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+            child: Text('Save Settings'),
+          ),
+        ],
       ),
     );
   }
