@@ -4,6 +4,7 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:pretty_gauge/pretty_gauge.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
+import 'dart:math';
 import 'dart:math' show Random;
 
 
@@ -164,29 +165,44 @@ class GraphScreen extends StatefulWidget {
 }
 
 class _GraphScreenState extends State<GraphScreen> {
-  List<double> heartRates = List.generate(24, (index) => 50 + index.toDouble());
+  List<double> heartRates = List.generate(60, (_) => 0.0);
+
+  Timer? dataUpdateTimer;
 
   @override
   void initState() {
     super.initState();
-    // Example: Update data over time
-    Timer.periodic(Duration(seconds: 5), (timer) {
-      if (mounted) {
-        setState(() {
-          heartRates = List.generate(24, (index) => 50 + (index * (timer.tick % 50)).toDouble());
-        });
-      }
+    startDataUpdates();
+  }
+
+  @override
+  void dispose() {
+    // Stop the timer when the widget is disposed to avoid memory leaks
+    dataUpdateTimer?.cancel();
+    super.dispose();
+  }
+
+  void startDataUpdates() {
+    // Set up a timer that updates the data every 1 minute
+    dataUpdateTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+      final random = Random();
+      final newBPM = 60 + random.nextInt(160); // Simulate a new BPM value
+
+      setState(() {
+        heartRates.removeAt(0);
+        heartRates.add(newBPM.toDouble());
+        print("Updated heart rates: $heartRates"); // Log updated list for verification
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+     //appBar: AppBar(title: Text('Average BPM Over an Hour')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: LineChart(
-          mainData(),
-        ),
+        child: LineChart(mainData()),
       ),
     );
   }
@@ -197,16 +213,16 @@ class _GraphScreenState extends State<GraphScreen> {
       titlesData: FlTitlesData(show: true),
       borderData: FlBorderData(show: true, border: Border.all(color: Colors.blue, width: 1)),
       minX: 0,
-      maxX: heartRates.length.toDouble(),
-      minY: 0,
-      maxY: 220,
+      maxX: 59, // There are 6 ten-minute intervals in an hour
+      minY: 0, // Scale down for better visibility
+      maxY: 220, // Scale up for better visibility
       lineBarsData: [
         LineChartBarData(
           spots: heartRates.asMap().entries.map((e) => FlSpot(e.key.toDouble(), e.value)).toList(),
           isCurved: true,
           color: Colors.red,
           barWidth: 5,
-          dotData: FlDotData(show: false),
+          dotData: FlDotData(show: true),
           belowBarData: BarAreaData(show: true, color: Colors.red.withOpacity(0.3)),
         ),
       ],
