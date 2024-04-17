@@ -34,9 +34,10 @@ class HeartRateGauge extends StatelessWidget {
           maxValue: 200,
           currentValue: currentHeartRate,
           segments: [
-            GaugeSegment('Low', 60, Colors.green),
-            GaugeSegment('Medium', 80, Colors.orange),
-            GaugeSegment('High', 60, Colors.red),
+            GaugeSegment('Super Low', 30, Colors.grey),
+            GaugeSegment('Low', 50, Colors.green),
+            GaugeSegment('Medium', 70, Colors.orange),
+            GaugeSegment('High', 50, Colors.red),
           ],
           needleColor: Colors.black,
           displayWidget: Text(
