@@ -165,7 +165,7 @@ class GraphScreen extends StatefulWidget {
 }
 
 class _GraphScreenState extends State<GraphScreen> {
-  List<double> heartRates = List.generate(60, (_) => 0.0);
+  List<double> heartRates = []; // Start with an empty list
 
   Timer? dataUpdateTimer;
 
@@ -177,21 +177,20 @@ class _GraphScreenState extends State<GraphScreen> {
 
   @override
   void dispose() {
-    // Stop the timer when the widget is disposed to avoid memory leaks
-    dataUpdateTimer?.cancel();
+    dataUpdateTimer?.cancel(); // Stop the timer when the widget is disposed
     super.dispose();
   }
 
   void startDataUpdates() {
-    // Set up a timer that updates the data every 1 minute
     dataUpdateTimer = Timer.periodic(Duration(minutes: 1), (timer) {
       final random = Random();
       final newBPM = 60 + random.nextInt(160); // Simulate a new BPM value
 
       setState(() {
-        heartRates.removeAt(0);
         heartRates.add(newBPM.toDouble());
-        print("Updated heart rates: $heartRates"); // Log updated list for verification
+        if (heartRates.length > 60) { // Ensure we keep only the latest 60 data points
+          heartRates.removeAt(0);
+        }
       });
     });
   }
@@ -199,7 +198,7 @@ class _GraphScreenState extends State<GraphScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     //appBar: AppBar(title: Text('Average BPM Over an Hour')),
+      //appBar: AppBar(title: Text('Average BPM Over an Hour')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: LineChart(mainData()),
@@ -213,7 +212,7 @@ class _GraphScreenState extends State<GraphScreen> {
       titlesData: FlTitlesData(show: true),
       borderData: FlBorderData(show: true, border: Border.all(color: Colors.blue, width: 1)),
       minX: 0,
-      maxX: 59, // There are 6 ten-minute intervals in an hour
+      maxX: 59, // 
       minY: 0, // Scale down for better visibility
       maxY: 220, // Scale up for better visibility
       lineBarsData: [
