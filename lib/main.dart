@@ -165,32 +165,48 @@ class GraphScreen extends StatefulWidget {
 }
 
 class _GraphScreenState extends State<GraphScreen> {
-  List<double> heartRates = []; // Start with an empty list
-
-  Timer? dataUpdateTimer;
+  List<double> heartRates = [];
+  double sumBPM = 0;
+  int countBPM = 0;
+  Timer? updateTimer;
 
   @override
   void initState() {
     super.initState();
-    startDataUpdates();
+    setupMQTTSubscription();
+    setupMinuteTimer();
   }
 
   @override
   void dispose() {
-    dataUpdateTimer?.cancel(); // Stop the timer when the widget is disposed
+    updateTimer?.cancel();
     super.dispose();
+    // Additionally, unsubscribe from your MQTT topic here
   }
 
-  void startDataUpdates() {
-    dataUpdateTimer = Timer.periodic(Duration(minutes: 1), (timer) {
-      final random = Random();
-      final newBPM = 60 + random.nextInt(160); // Simulate a new BPM value
+  void setupMQTTSubscription() {
+    // Simulating MQTT updates - Replace this with your actual MQTT subscription
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      final newBPM = 60 + Random().nextInt(40); // Simulated data update
+      processIncomingData(newBPM.toDouble());
+    });
+  }
 
+  void processIncomingData(double newBPM) {
+    setState(() {
+      sumBPM += newBPM;
+      countBPM += 1;
+    });
+  }
+
+  void setupMinuteTimer() {
+    updateTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+      double averageBPM = countBPM > 0 ? sumBPM / countBPM : 0;
       setState(() {
-        heartRates.add(newBPM.toDouble());
-        if (heartRates.length > 60) { // Ensure we keep only the latest 60 data points
-          heartRates.removeAt(0);
-        }
+        if (heartRates.length >= 60) heartRates.removeAt(0); // Keep only the last 60 entries
+        heartRates.add(averageBPM);
+        sumBPM = 0; // Reset for the next minute
+        countBPM = 0;
       });
     });
   }
@@ -212,9 +228,9 @@ class _GraphScreenState extends State<GraphScreen> {
       titlesData: FlTitlesData(show: true),
       borderData: FlBorderData(show: true, border: Border.all(color: Colors.blue, width: 1)),
       minX: 0,
-      maxX: 59, // 
-      minY: 0, // Scale down for better visibility
-      maxY: 220, // Scale up for better visibility
+      maxX: 59,
+      minY: 0,
+      maxY: 220,
       lineBarsData: [
         LineChartBarData(
           spots: heartRates.asMap().entries.map((e) => FlSpot(e.key.toDouble(), e.value)).toList(),
