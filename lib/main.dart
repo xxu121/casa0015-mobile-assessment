@@ -17,43 +17,84 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HeartRateGauge extends StatelessWidget {
+class HeartRateGauge extends StatefulWidget {
   final double currentHeartRate;
   final double averageBPM;
 
   HeartRateGauge({required this.currentHeartRate, required this.averageBPM});
 
   @override
+  _HeartRateGaugeState createState() => _HeartRateGaugeState();
+}
+
+class _HeartRateGaugeState extends State<HeartRateGauge> {
+  bool isExerciseMode = false;
+
+  @override
   Widget build(BuildContext context) {
+    List<GaugeSegment> segments = isExerciseMode
+      ? [
+          GaugeSegment('Super Low', 60, Colors.grey),   // 0-60
+          GaugeSegment('Low', 60, Colors.green),       //60-120
+          GaugeSegment('Medium', 70, Colors.orange),   //120-190
+          GaugeSegment('High', 30, Colors.red),        //190-220
+        ]
+      : [
+          GaugeSegment('Super Low', 30, Colors.grey),  //0-30
+          GaugeSegment('Low', 60, Colors.green),       //30-90
+          GaugeSegment('Medium', 70, Colors.orange),   //90-160
+          GaugeSegment('High', 60, Colors.red),        //160-220
+        ];
+      String getRangeDescription() {
+    if (isExerciseMode) {
+      return 'Ranges: Super Low (0-60), Low (60-120), Medium (120-190), High (190-220)';
+    } else {
+      return 'Ranges: Super Low (0-30), Low (30-90), Medium (90-160), High (160-220)';
+    }
+  }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         PrettyGauge(
-          gaugeSize: 200,
+          gaugeSize: 220,
           minValue: 0,
-          maxValue: 200,
-          currentValue: currentHeartRate,
-          segments: [
-            GaugeSegment('Super Low', 30, Colors.grey),
-            GaugeSegment('Low', 50, Colors.green),
-            GaugeSegment('Medium', 70, Colors.orange),
-            GaugeSegment('High', 50, Colors.red),
-          ],
+          maxValue: 220,
+          currentValue: widget.currentHeartRate,
+          segments: segments,
           needleColor: Colors.black,
           displayWidget: Text(
-            '${currentHeartRate.toStringAsFixed(2)} bpm',
+            '${widget.currentHeartRate.toStringAsFixed(2)} bpm',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(height: 20),
         Text(
-          'Average BPM: ${averageBPM.toStringAsFixed(2)}',
+          'Average BPM: ${widget.averageBPM.toStringAsFixed(2)}',
           style: TextStyle(fontSize: 16),
+        ),
+
+        
+        SizedBox(height: 20),
+        Text(
+          getRangeDescription(),
+          style: TextStyle(fontSize: 14, color: Colors.grey),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              isExerciseMode = !isExerciseMode;
+            });
+          },
+          child: Text(isExerciseMode ? 'Switch to Normal Mode' : 'Switch to Exercise Mode'),
         ),
       ],
     );
   }
 }
+
 
 
 // New HomeScreen widget
@@ -183,7 +224,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
-                // Save settings or use them as needed
+               
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -264,7 +305,7 @@ class ListViewState extends State<MyListView>{
     // Set the correct MQTT protocol for mosquito
     client.setProtocolV311();
 
-    // If you intend to use a keep alive you must set it here otherwise keep alive will be disabled.
+    
     client.keepAlivePeriod = 30;
 
     final String username = 'student';
