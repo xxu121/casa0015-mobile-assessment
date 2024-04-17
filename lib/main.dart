@@ -17,6 +17,43 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class HeartRateGauge extends StatelessWidget {
+  final double currentHeartRate;
+  final double averageBPM;
+
+  HeartRateGauge({required this.currentHeartRate, required this.averageBPM});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        PrettyGauge(
+          gaugeSize: 200,
+          minValue: 0,
+          maxValue: 200,
+          currentValue: currentHeartRate,
+          segments: [
+            GaugeSegment('Low', 60, Colors.green),
+            GaugeSegment('Medium', 80, Colors.orange),
+            GaugeSegment('High', 60, Colors.red),
+          ],
+          needleColor: Colors.black,
+          displayWidget: Text(
+            '${currentHeartRate.toStringAsFixed(2)} bpm',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(height: 20),
+        Text(
+          'Average BPM: ${averageBPM.toStringAsFixed(2)}',
+          style: TextStyle(fontSize: 16),
+        ),
+      ],
+    );
+  }
+}
+
 
 // New HomeScreen widget
 class HomeScreen extends StatefulWidget {
@@ -179,6 +216,8 @@ class MyListView extends StatefulWidget {
 
 class ListViewState extends State<MyListView>{
   late List<Widget> feeds;
+  double currentHeartRate = 0.0;
+  double averageBPM = 0.0;
 
   @override
   void initState() {
@@ -189,21 +228,26 @@ class ListViewState extends State<MyListView>{
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: feeds.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: feeds[index],
-        );
-      },
+    return ListView(
+      children: [
+        HeartRateGauge(currentHeartRate: currentHeartRate, averageBPM: averageBPM),
+        ...feeds.map((feed) => ListTile(title: Text(feed.toString()))).toList(),
+      ],
     );
   }
-
-  updateList(String s){
+  void updateList(String s) {
+    // Extracting heart rate and average BPM from MQTT message
+    final heartRateMatch = RegExp(r"Heart Rate: (\d+\.\d+)").firstMatch(s);
+    final averageBPMMatch = RegExp(r"Average BPM: (\d+)").firstMatch(s);
+    
     setState(() {
+      if (heartRateMatch != null) currentHeartRate = double.parse(heartRateMatch.group(1)!);
+      if (averageBPMMatch != null) averageBPM = double.parse(averageBPMMatch.group(1)!);
       feeds.add(Text(s));
     });
   }
+}
+
 
   Future<void> startMQTT() async{
     final client = MqttServerClient('mqtt.cetools.org', 'student');
@@ -250,9 +294,9 @@ class ListViewState extends State<MyListView>{
       print('Change notification:: topic is <${c[0].topic}>, payload is <-- $messageString -->');
       print('');
 
-      updateList(messageString);
+      //updateList(messageString);
     } );
 
   }
 
-}
+//}
