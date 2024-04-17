@@ -32,6 +32,7 @@ dependencies:
     sdk: flutter
   mqtt_client:
   pretty_gauge: 1.0.0
+  fl_chart: 0.67.0
 
 
   # The following adds the Cupertino Icons font to your application.
