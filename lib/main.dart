@@ -3,6 +3,9 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:pretty_gauge/pretty_gauge.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'dart:async';
+import 'dart:math' show Random;
+
 
 void main() {
   runApp(MyApp());
@@ -110,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Screens for each bottom navigation item
   final List<Widget> _widgetOptions = <Widget>[
     MyListView(),
-    Text('Graph'), // Placeholder for graph screen
+    GraphScreen(), // Placeholder for graph screen
     SettingsScreen(), // Settings screen
   ];
 
@@ -146,6 +149,67 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+    );
+  }
+}
+List<double> generateHourlyHeartRateData() {
+  final random = Random();
+  // Generates a list of 24 random heart rate values, one for each hour, as doubles.
+  return List.generate(24, (index) => 60.0 + random.nextInt(40).toDouble());
+}
+
+class GraphScreen extends StatefulWidget {
+  @override
+  _GraphScreenState createState() => _GraphScreenState();
+}
+
+class _GraphScreenState extends State<GraphScreen> {
+  List<double> heartRates = List.generate(24, (index) => 50 + index.toDouble());
+
+  @override
+  void initState() {
+    super.initState();
+    // Example: Update data over time
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      if (mounted) {
+        setState(() {
+          heartRates = List.generate(24, (index) => 50 + (index * (timer.tick % 50)).toDouble());
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: LineChart(
+          mainData(),
+        ),
+      ),
+    );
+  }
+
+  LineChartData mainData() {
+    return LineChartData(
+      gridData: FlGridData(show: true),
+      titlesData: FlTitlesData(show: true),
+      borderData: FlBorderData(show: true, border: Border.all(color: Colors.blue, width: 1)),
+      minX: 0,
+      maxX: heartRates.length.toDouble(),
+      minY: 0,
+      maxY: 220,
+      lineBarsData: [
+        LineChartBarData(
+          spots: heartRates.asMap().entries.map((e) => FlSpot(e.key.toDouble(), e.value)).toList(),
+          isCurved: true,
+          color: Colors.red,
+          barWidth: 5,
+          dotData: FlDotData(show: false),
+          belowBarData: BarAreaData(show: true, color: Colors.red.withOpacity(0.3)),
+        ),
+      ],
     );
   }
 }
