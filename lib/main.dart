@@ -17,10 +17,114 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(useMaterial3: false),
-      home: HomeScreen(), // Redirecting to a new HomeScreen widget that includes a bottom navigation bar
+      home: LoginPage(), // Redirecting to a new HomeScreen widget that includes a bottom navigation bar
     );
   }
 }
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String _errorMessage = '';
+
+  void _login() {
+    if (_usernameController.text == 'admin' && _passwordController.text == 'admin') {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
+    } else {
+      setState(() {
+        _errorMessage = 'Incorrect username or password.';
+      });
+    }
+  }
+
+  void _navigateToSignUp() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => SignUpPage()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Login')),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: _login, child: Text('Login')),
+            TextButton(onPressed: _navigateToSignUp, child: Text('Sign Up')),
+            Text(_errorMessage, style: TextStyle(color: Colors.red)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class SignUpPage extends StatefulWidget {
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String _errorMessage = '';
+
+  void _register() {
+    // Here you would normally include your registration logic
+    // For now, just print the credentials to the console
+    print('Registering with Username: ${_usernameController.text}, Email: ${_emailController.text}, Password: ${_passwordController.text}');
+    // Navigate to login or home page after registration
+    Navigator.pop(context);  // Assuming registration is successful
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Sign Up')),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: _register, child: Text('Register')),
+            SizedBox(height: 10),
+            Text(_errorMessage, style: TextStyle(color: Colors.red)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class HeartRateGauge extends StatefulWidget {
   final double currentHeartRate;
