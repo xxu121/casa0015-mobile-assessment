@@ -12,7 +12,9 @@ This app is designed for users who want to monitor their heart rate in real-time
 
 ## Physical device
 
+ESP8266 connection
 
+https://github.com/xxu121/casa0015-mobile-assessment/tree/main/heartrate_0015
 
 ## Installation
 
