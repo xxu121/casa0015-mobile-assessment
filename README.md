@@ -29,8 +29,11 @@ git clone[https://github.com/your_username_/FollowYourHeart.git](https://github.
 
 ### Step 2: Install Dependencies
 Navigate into the project directory and install the required Flutter packages. Run the following command in your terminal:
+
 cd FollowYourHeart
+
 flutter pub get
+
 This command retrieves all the necessary dependencies as defined in pubspec.yaml.
 
 
@@ -42,6 +45,7 @@ Ensure you have an MQTT broker set up and running. This project uses MQTT to rec
 Open the app's configuration file located at lib/config.dart. Ensure the MQTT settings (broker URL and port) match those of your MQTT broker setup. Update these settings accordingly
 
 const String MQTT_BROKER = 'YOUR_BROKER_ADDRESS';
+
 const int MQTT_PORT = YOUR_BROKER_PORT;
 
 
