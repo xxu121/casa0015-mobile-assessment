@@ -60,6 +60,23 @@ flutter run
 After launching the app, log in using the credentials (default admin account is admin/admin). The heart rate monitor starts automatically if the MQTT broker is properly configured and transmitting data.
 
 
+## Screens
+Login Screen: Enter your credentials to access the heart rate monitor.
+<img width="447" alt="image" src="https://github.com/xxu121/casa0015-mobile-assessment/assets/146341729/0ecf75bf-2b1a-4424-8a57-0b612ca6cc48">
+
+Heart Rate Monitor: View your current heart rate and historical data on a gauge and graph.
+
+<img width="447" alt="image" src="https://github.com/xxu121/casa0015-mobile-assessment/assets/146341729/c3248f0d-4d16-4c62-8954-89cb06aea394">  <img width="447" alt="image" src="https://github.com/xxu121/casa0015-mobile-assessment/assets/146341729/f9c54a50-7213-4614-9ddc-7c4f94b0fe66">
+
+
+Settings: Adjust settings and view app information.
+
+<img width="447" alt="image" src="https://github.com/xxu121/casa0015-mobile-assessment/assets/146341729/ee21c725-26bb-43b0-9cad-3c669d7fb873"> <img width="447" alt="image" src="https://github.com/xxu121/casa0015-mobile-assessment/assets/146341729/61d17932-9b6a-44a5-a77f-ce76f3fe64b6">
+
+
+
+
+
 ##  Contact Details
 
 Having Contact Details is also good as it shows people how to get in contact with you if they'd like to contribute to the app. 
