@@ -10,6 +10,8 @@ This app is designed for users who want to monitor their heart rate in real-time
 - **User Authentication**: Includes a login and registration system to manage access.
 - **Cross-Platform Compatibility**: Built with Flutter, making it available for both Android and iOS devices.
 
+## Physical device
+
 
 
 ## Installation
@@ -62,6 +64,7 @@ After launching the app, log in using the credentials (default admin account is 
 
 ## Screens
 Login Screen: Enter your credentials to access the heart rate monitor.
+
 <img width="447" alt="image" src="https://github.com/xxu121/casa0015-mobile-assessment/assets/146341729/0ecf75bf-2b1a-4424-8a57-0b612ca6cc48">
 
 Heart Rate Monitor: View your current heart rate and historical data on a gauge and graph.
@@ -74,7 +77,28 @@ Settings: Adjust settings and view app information.
 <img width="447" alt="image" src="https://github.com/xxu121/casa0015-mobile-assessment/assets/146341729/ee21c725-26bb-43b0-9cad-3c669d7fb873"> <img width="447" alt="image" src="https://github.com/xxu121/casa0015-mobile-assessment/assets/146341729/61d17932-9b6a-44a5-a77f-ce76f3fe64b6">
 
 
+## Roadmap
 
+Add predictive analytics to forecast potential health risks based on collected data.
+
+Integrate with additional health-monitoring devices for a more comprehensive health status overview.
+
+Improve data security and user management.
+
+## Contributing
+
+GPT4 of Code Generation: Several snippets of the code, especially those involving complex logic and string manipulations, were suggested by GPT-4.
+
+
+Wix of Web Generation: Utilizing Wix's robust platform, the project features a professionally designed landing page that enhances user engagement and effectively communicates the app's benefits.
+
+## Acknowledgments
+
+GPT-4: For generating documentation and providing code suggestions. 
+
+Wix: For facilitating the creation of an engaging landing page.
+
+Flutter Community: For ongoing support and resources.
 
 
 ##  Contact Details
