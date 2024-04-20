@@ -105,6 +105,8 @@ Flutter Community: For ongoing support and resources.
 
 ##  Contact Details
 
-Having Contact Details is also good as it shows people how to get in contact with you if they'd like to contribute to the app. 
+Xincen, Xu: ucfnxxu@ucl.ac.uk
+
+Project Link:
 
 Web: [https://xuxincen695.wixsite.com/my-site](https://xuxincen695.wixsite.com/my-site)
