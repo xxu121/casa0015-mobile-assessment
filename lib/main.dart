@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+Map<String, String> registeredUsers = {'admin': 'admin'};
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -32,13 +35,25 @@ class _LoginPageState extends State<LoginPage> {
   String _errorMessage = '';
 
   void _login() {
-    if (_usernameController.text == 'admin' && _passwordController.text == 'admin') {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
-    } else {
-      setState(() {
-        _errorMessage = 'Incorrect username or password.';
+    
+   String username = _usernameController.text;
+  String password = _passwordController.text;
+
+  if (username.isEmpty || password.isEmpty) {
+    setState(() {
+      _errorMessage = 'Username and password cannot be empty.';
+    });
+    return;
+  }
+
+  if (registeredUsers.containsKey(username) && registeredUsers[username] == password) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
+  } else {
+    setState(() {
+      _errorMessage = 'Incorrect username or password.';
       });
     }
+    
   }
 
   void _navigateToSignUp() {
@@ -73,6 +88,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
+
 class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -85,11 +103,34 @@ class _SignUpPageState extends State<SignUpPage> {
   String _errorMessage = '';
 
   void _register() {
-    // Here you would normally include your registration logic
-    // For now, just print the credentials to the console
-    print('Registering with Username: ${_usernameController.text}, Email: ${_emailController.text}, Password: ${_passwordController.text}');
-    // Navigate to login or home page after registration
-    Navigator.pop(context);  // Assuming registration is successful
+  if (_usernameController.text.isEmpty || _passwordController.text.isEmpty || _emailController.text.isEmpty) {
+    setState(() {
+      _errorMessage = 'All fields are required.';
+    });
+    return;
+  }
+
+  // Prevent overriding the admin account
+  if (_usernameController.text == 'admin') {
+    setState(() {
+      _errorMessage = 'This username is reserved. Please choose another.';
+    });
+    return;
+  }
+
+  if (registeredUsers.containsKey(_usernameController.text)) {
+    setState(() {
+      _errorMessage = 'Username already exists.';
+    });
+    return;
+  }
+
+  // Save the new user's username and password
+  registeredUsers[_usernameController.text] = _passwordController.text;
+  print('Registered Users: $registeredUsers');  // Optional: for debugging
+
+  // Assuming registration is successful, go back to the login page
+  Navigator.pop(context);
   }
 
   @override
