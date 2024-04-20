@@ -22,4 +22,4 @@ Include a section that gives intructions on how to install the app or run it in 
 
 Having Contact Details is also good as it shows people how to get in contact with you if they'd like to contribute to the app. 
 
-Web: https://xuxincen695.wixsite.com/my-site
+Web: [https://xuxincen695.wixsite.com/my-site](https://xuxincen695.wixsite.com/my-site)
