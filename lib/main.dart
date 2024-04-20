@@ -313,20 +313,22 @@ class _GraphScreenState extends State<GraphScreen> {
   List<double> heartRates = [];
   double sumBPM = 0;
   int countBPM = 0;
-  Timer? updateTimer;
+  Timer? minuteUpdateTimer;
+  Timer? hourlyResetTimer;
 
   @override
   void initState() {
     super.initState();
     setupMQTTSubscription();
     setupMinuteTimer();
+    setupHourlyResetTimer();
   }
 
   @override
   void dispose() {
-    updateTimer?.cancel();
+    minuteUpdateTimer?.cancel();
+    hourlyResetTimer?.cancel();
     super.dispose();
-    // Additionally, unsubscribe from your MQTT topic here
   }
 
   void setupMQTTSubscription() {
@@ -345,13 +347,20 @@ class _GraphScreenState extends State<GraphScreen> {
   }
 
   void setupMinuteTimer() {
-    updateTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+    minuteUpdateTimer = Timer.periodic(Duration(minutes: 1), (timer) {
       double averageBPM = countBPM > 0 ? sumBPM / countBPM : 0;
       setState(() {
-        if (heartRates.length >= 60) heartRates.removeAt(0); // Keep only the last 60 entries
         heartRates.add(averageBPM);
-        sumBPM = 0; // Reset for the next minute
+        sumBPM = 0;
         countBPM = 0;
+      });
+    });
+  }
+
+  void setupHourlyResetTimer() {
+    hourlyResetTimer = Timer.periodic(Duration(hours: 1), (timer) {
+      setState(() {
+        heartRates.clear(); // Clear data every hour
       });
     });
   }
@@ -359,7 +368,6 @@ class _GraphScreenState extends State<GraphScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(title: Text('Average BPM Over an Hour')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: LineChart(mainData()),
@@ -373,7 +381,7 @@ class _GraphScreenState extends State<GraphScreen> {
       titlesData: FlTitlesData(show: true),
       borderData: FlBorderData(show: true, border: Border.all(color: Colors.blue, width: 1)),
       minX: 0,
-      maxX: 59,
+      maxX: heartRates.length.toDouble() - 1,
       minY: 0,
       maxY: 220,
       lineBarsData: [
@@ -389,6 +397,7 @@ class _GraphScreenState extends State<GraphScreen> {
     );
   }
 }
+
 
 class SettingsScreen extends StatefulWidget {
   @override
